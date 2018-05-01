@@ -1165,7 +1165,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="KzP-UK-FcN">
-                                <rect key="frame" x="5" y="69" width="365" height="537.5"/>
+                                <rect key="frame" x="5" y="69" width="365" height="517.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AsR-uB-dyq">
                                         <rect key="frame" x="0.0" y="0.0" width="365" height="15"/>
@@ -1181,7 +1181,7 @@
                                             </stackView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="MjF-Xp-N4H"/>
+                                            <constraint firstAttribute="height" constant="30" id="Cbh-Wc-WLF"/>
                                         </constraints>
                                     </stackView>
                                     <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ktd-Ei-5gF">
@@ -1192,16 +1192,16 @@
                                         </constraints>
                                     </webView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="EventDescription" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="gML-uv-pSP">
-                                        <rect key="frame" x="0.0" y="225" width="365" height="150"/>
+                                        <rect key="frame" x="0.0" y="225" width="365" height="130"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="150" id="uxC-rT-J8o"/>
+                                            <constraint firstAttribute="height" constant="130" id="182-5R-FaO"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="k6i-O6-5ij">
-                                        <rect key="frame" x="0.0" y="380" width="365" height="157.5"/>
+                                        <rect key="frame" x="0.0" y="360" width="365" height="157.5"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qyi-4e-t9r">
                                                 <rect key="frame" x="0.0" y="0.0" width="174.5" height="150"/>
@@ -1287,8 +1287,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="KzP-UK-FcN" firstAttribute="top" secondItem="H4o-A4-ZEl" secondAttribute="bottom" constant="5" id="Ftq-ds-zpU"/>
-                            <constraint firstAttribute="trailing" secondItem="KzP-UK-FcN" secondAttribute="trailing" constant="5" id="iSc-SY-Rd0"/>
-                            <constraint firstItem="KzP-UK-FcN" firstAttribute="leading" secondItem="Eej-lT-Qxf" secondAttribute="leading" constant="5" id="mLP-fL-tql"/>
+                            <constraint firstAttribute="trailing" secondItem="KzP-UK-FcN" secondAttribute="trailing" constant="5" id="LRf-Vx-Z6o"/>
+                            <constraint firstItem="KzP-UK-FcN" firstAttribute="leading" secondItem="Eej-lT-Qxf" secondAttribute="leading" constant="5" id="h00-KZ-9xX"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="F8m-XN-rFJ"/>
