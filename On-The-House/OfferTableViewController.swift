@@ -7,115 +7,170 @@
 //
 
 import UIKit
+import os
 
 class OfferTableViewController: UITableViewController {
+    
+    @IBOutlet weak var menuButton: UIBarButtonItem!
+    func sideMenus() {
+        
+        if revealViewController() != nil {
+            menuButton.target = revealViewController()
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+            revealViewController().rearViewRevealWidth = 275
+            revealViewController().rightViewRevealWidth = 160
+            view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
+    }
     var offer = [OfferModel]()
-
+    // to implement the structure of resonpse json
+    struct JsonRec : Decodable{
+        let status : String
+        let events: [Events]
+        
+        enum CodingKeys : String, CodingKey{
+            case status = "status"
+            case events = "events"
+        }
+    }
+    
+    struct Events : Decodable{
+        let name:String
+        let image: URL
+        let description:String
+        let rate: Int
+        
+        enum CodingKeys : String, CodingKey {
+            case name = "name"
+            case image = "image_url"
+            case description = "description"
+            case rate = "rating"
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Uncomment the following line to preserve selection between presentations
+        sideMenus()
+        getConnect()
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    
+    // to get current events
+    func getConnect(){
+        //         to get current date as yyyy-mm-dd
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateString = formatter.string(from: Date())
+        //         Post request
+        let urlString: String = "http://ma.on-the-house.org/api/v1/events/current"
+        guard let URLreq = URL(string: urlString) else {
+            print("Error: cannot create URL")
+            return
+        }
+        var postRequest = URLRequest(url: URLreq)
+        postRequest.httpMethod = "POST"
+        //        let postBody: [String: Any] = ["page":1,"limit":10,"date":dateString,"category_id":[5,15,38],"zone_id":[16,18,22]]
+        let postBody: [String: Any] = ["page":1,"limit":10]
+        let postJson: Data
+        do {
+            postJson = try JSONSerialization.data(withJSONObject: postBody, options: [])
+            postRequest.httpBody = postJson
+        } catch {
+            print("Error: cannot create postJSON")
+            return
+        }
+        
+        let session = URLSession.shared
+        let semaphore = DispatchSemaphore(value: 0)
+        let task = session.dataTask(with: postRequest) {
+            (data, response, error) in
+            guard error == nil else {
+                print("Error: calling POST!")
+                return
+            }
+            guard let responseData = data else {
+                print("Error: did not receive data")
+                return
+            }
+            // parse the result as JSON
+            guard let receivedData = try? JSONDecoder().decode(JsonRec.self, from: responseData) else{
+                print("Could not get JSON from responseData as dictionary")
+                return
+            }
+            if receivedData.status == "success"{
+                for i in receivedData.events{
+                    if let data = try? Data(contentsOf: i.image)
+                    {
+                        let image: UIImage = UIImage(data: data)!
+                        let offer1 = OfferModel(name: i.name, photo: image, description: i.description, rate: i.rate)
+                        self.offer.append(offer1)
+                    }
+                }
+            }
+            semaphore.signal()
+        }
+        task.resume()
+        _ = semaphore.wait(timeout: .distantFuture)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (offer.count == 0)
+        {
+            print("Error: failed to load data!")
+        }
         // #warning Incomplete implementation, return the number of rows
         return offer.count
     }
-
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cellIdentifier = "CECell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? OfferEventCell  else {
+            fatalError("The dequeued cell is not an instance of OfferEventCell.")
+        }
+        let offerEvents = offer[indexPath.row]
+        cell.NameLabel.text = offerEvents.name
+        cell.ImageView.image = offerEvents.photo
+        cell.ratingControl.rating  = offerEvents.rate
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        //      Get the new view controller using segue.destinationViewController.
+        //      Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)
+        switch(segue.identifier ?? ""){
+        case"ShowDetail":
+            os_log("Show Details.", log: OSLog.default, type: .debug)
+            guard let detailViewController = segue.destination as? OfferDetailViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let selectedEventCell = sender as? OfferEventCell else {
+                fatalError("Unexpected sender: \(sender)")
+            }
+            
+            guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            let selectedCellImage = offer[indexPath.row]
+            detailViewController.offerDetail = selectedCellImage
+            
+        default:
+            print("Can't find the identifer")
+            break
+        }
     }
-    //
-   // func loadSampleOffer(){
-        
-     //  let photo1 = UIImage(named:"1")
-      //  let photo2 = UIImage(named:"2")
-      //  let photo3 = UIImage(named:"3")
-      //  let photo4 = UIImage(named:"4")
-      //  let photo5 = UIImage(named:"5")
-        
-      //  guard let offer1 = OfferModel(name:"1", photo: photo1!, Description:"11111")else{
-      //      fatalError("Unable to instantiate Offer1")
-      //  }
-      //  guard let offer2 = OfferModel(name:"2", photo: photo2!, Description:"11111")else{
-      //      fatalError("Unable to instantiate Offer2")
-       // }
-      //  guard let offer3 = OfferModel(name:"3", photo: photo3!, Description:"11111")else{
-      //      fatalError("Unable to instantiate Offer3")
-      //  }
-      //  guard let offer4 = OfferModel(name:"4", photo: photo4!, Description:"11111")else{
-      //      fatalError("Unable to instantiate Offer4")
-      //  }
-      //  guard let offer5 = OfferModel(name:"5", photo: photo5!, Description:"11111")else{
-      //      fatalError("Unable to instantiate Offer5")
-      //  }
-      //  offers += [offer1, offer2, offer3, offer4, offer5]*/
-    }
+}
+
 
 
