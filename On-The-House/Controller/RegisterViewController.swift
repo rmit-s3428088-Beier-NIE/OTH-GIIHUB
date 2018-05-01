@@ -11,12 +11,15 @@ import UIKit
 
 
 class RegisterViewController : UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
+    
     var tempArr : [String] = []
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        
+        
         return tempArr.count
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -121,16 +124,20 @@ class RegisterViewController : UIViewController, UIPickerViewDelegate, UIPickerV
     }
     
     @IBAction func referenceSelect(_ sender: Any) {
+        print(referencechoices)
+        tempArr = referencechoices
+        displayPickerView(true)
+    }
+    @IBAction func stateSelect(_ sender: Any) {
+        tempArr = statechoices
+        displayPickerView(true)
     }
     
     @IBAction func stateGoBack(_ sender: Any) {
-        tempArr = statechoices
+        
         displayPickerView(false)
     }
     
-    @IBAction func stateSelect(_ sender: Any) {
-        displayPickerView(true)
-    }
     func displayPickerView(_ show: Bool){
         for c in view.constraints{
             if c.identifier == "bottom"{

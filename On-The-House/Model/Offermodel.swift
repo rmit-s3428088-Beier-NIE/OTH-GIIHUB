@@ -25,5 +25,11 @@ class OfferModel{
         self.rate = rate
     }
     
+    init(name:String, description: String, rate:Int){
+    self.name = name
+    self.description = description
+    self.rate = rate
+    }
+    
 }
 

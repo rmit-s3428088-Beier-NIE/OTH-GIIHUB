@@ -30,7 +30,6 @@ class PastEventTableViewController: UITableViewController {
         
         enum CodingKeys : String, CodingKey {
             case name = "name"
-            
             case description = "description"
             case rate = "rating"
         }
@@ -95,7 +94,7 @@ class PastEventTableViewController: UITableViewController {
                             tempStr = tempStr+i
                         }
                     }
-                    let offer1 = OfferModel(name: i.name, photo: #imageLiteral(resourceName: "lack_images"), description: tempStr, rate: i.rate)
+                    let offer1 = OfferModel(name: i.name, description: tempStr, rate: i.rate)
                     self.PastOffer.append(offer1)
                     
                 }
