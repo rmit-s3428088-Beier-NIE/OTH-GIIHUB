@@ -24,13 +24,13 @@ class PastEventTableViewController: UITableViewController {
     
     struct Events : Decodable{
         let name:String
-        //        let image: URL
+        
         let description:String
         let rate: Int
         
         enum CodingKeys : String, CodingKey {
             case name = "name"
-            //            case image = "image_url"
+            
             case description = "description"
             case rate = "rating"
         }
@@ -135,7 +135,7 @@ class PastEventTableViewController: UITableViewController {
         }
         let pastEvents = PastOffer[indexPath.row]
         cell.PastEventName.text = pastEvents.name
-        cell.PastEventImage.image = pastEvents.photo
+        
         cell.PastEventDescription.text = pastEvents.description
         cell.PastEventRatingControl.rating = pastEvents.rate
         return cell
