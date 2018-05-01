@@ -14,7 +14,7 @@ class OfferDetailViewController: UIViewController {
     @IBOutlet weak var ShareButton: UIButton!
     @IBOutlet weak var TicketButton: UIButton!
     @IBOutlet weak var EventImage: UIImageView!
-    //@IBOutlet weak var EventDescription: UILabel!
+    
     
     @IBOutlet weak var EventDescription: UITextView!
     var offerDetail:OfferModel!
